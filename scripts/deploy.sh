@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "Deploying the Calculator App container..."
-# Stop any old version of the app if it's running
+echo "Deploying the container..."
+# Stop any old container so we don't get a 'name already in use' error
 docker stop ci-calculator || true
 docker rm ci-calculator || true
-# Run the new version
-docker run -d --name ci-calculator -p 8080:8080 calculator-app:latest
+# Run the new container
+docker run -d -p 8081:8080 --name ci-calculator ci-calculator
