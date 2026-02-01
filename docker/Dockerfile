@@ -1,17 +1,12 @@
-# Stage 1: Build the application
-# We use a Docker image that already has Maven installed
-FROM maven:3.8.4-openjdk-17-slim AS build
+# Stage 1: Build using Maven and Eclipse Temurin (The modern Java)
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
-# Run the maven build inside the container
 RUN mvn clean package
 
-# Stage 2: Create the final image
-# We copy only the JAR file from the previous stage to keep it small
-FROM openjdk:17-jdk-slim
+# Stage 2: Run using a lightweight Java Runtime
+FROM eclipse-temurin:17-jre
 WORKDIR /app
 COPY --from=build /app/target/Calculator-1.0-SNAPSHOT.jar app.jar
-EXPOSE 8080
-# Command to run the app
 ENTRYPOINT ["java", "-jar", "app.jar"]
